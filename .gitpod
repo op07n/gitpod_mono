@@ -1,5 +1,1 @@
 image: Dockerfile
-
-tasks:
-  - command: "cd /"
-
