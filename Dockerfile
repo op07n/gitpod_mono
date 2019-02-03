@@ -1,4 +1,4 @@
-FROM gitpod/workspace-full-vnc:latest
+FROM gitpod/workspace-full:latest
 
 USER root
 
@@ -12,3 +12,7 @@ RUN echo "deb http://download.mono-project.com/repo/debian wheezy main" > /etc/a
 	&& apt-get update \
 	&& apt-get install -y mono-devel ca-certificates-mono fsharp mono-vbnc nuget referenceassemblies-pcl uuid-runtime \
 	&& rm -rf /var/lib/apt/lists/*
+	
+RUN apt-get install -y x11vnc net-tools xvfb	
+
+
