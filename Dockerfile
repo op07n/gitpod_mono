@@ -1,18 +1,42 @@
-# get opensuse image and run interactive session:
+FROM gitpod/workspace-full:latest
 
-docker pull opensuse:tumbleweed
-docker run -it -u root opensuse:tumbleweed /bin/bash
+# Install postgres
+USER root
 
-# install all the stuff in the container
+ENV MINGW=""
+ENV PREFIX=""
+ENV WORKSPACE=""
+ENV TARGET=""
+ENV WINREQ=""
+ENV BUILD_NUMBER=""
+ENV ARCH=""
+ENV BINDIR=""
+ENV LIBDIR=""
+ENV WININC=""
+ENV WINLIB=""
 
-zypper addrepo https://download.opensuse.org/repositories/windows:mingw:win32/openSUSE_Tumbleweed/windows:mingw:win32.repo
-zypper addrepo https://download.opensuse.org/repositories/windows:mingw:win64/openSUSE_Tumbleweed/windows:mingw:win64.repo
-zypper refresh
+RUN apt-get update \
+ && apt-get install --no-install-recommends --no-install-suggests -y \
+      mingw-w64 zip build-essential perl python xml2 \
+      svn2cl subversion subversion-tools pkg-config \
+      automake libtool autotools-dev \
+      pandoc lsb-release doxygen graphviz mscgen \
+      default-jre-headless \
+      make subversion g++ git \
+      qt5-default qtbase5-dev-tools qttools5-dev-tools \
+      flex bison gperf ruby bison wget less \
+ && /cleanup.sh
 
-zypper install mingw32-cross-gcc-c++
-zypper install mingw64-cross-gcc-c++
-zypper install meson
-zypper install glslang-devel
-zypper install wine
+ADD README.md /README.md
+ADD build-openssl.sh /build-openssl.sh
+ADD build-icu.sh /build-icu.sh
+ADD build-qt.sh /build-qt.sh
+ADD build.sh /build.sh
+ADD install-dll.sh /install-dll.sh
 
-exit
+WORKDIR /workdir
+RUN chmod ugo+wrx /workdir
+
+ENTRYPOINT ["/start.sh"]
+
+VOLUME /workdir
