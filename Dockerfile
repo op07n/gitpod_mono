@@ -1,9 +1,12 @@
 FROM gitpod/workspace-full-vnc:latest
 
 USER root
-
-RUN wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb && \
-    dpkg -i packages-microsoft-prod.deb && rm -rf packages-microsoft-prod.deb && \
-    add-apt-repository universe && \
-    apt-get update && apt-get -y -o APT::Install-Suggests="true" install dotnet-sdk-2.2 && \
-    apt -y clean;
+ 
+RUN echo “deb https://download.mono-project.com/repo/ubuntu stable-bionic main” | tee /etc/apt/sources.list.d/mono-official-stable.list && \
+    apt-key adv –keyserver hkp://keyserver.ubuntu.com:80 –recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
+    apt update && \
+    sudo apt install mono-devel && \
+    sudo apt install mono-complete && \
+    sudo apt install mono-dbg && \
+    sudo apt install referenceassemblies-pcl && \
+    sudo apt install ca-certificates-mono;
